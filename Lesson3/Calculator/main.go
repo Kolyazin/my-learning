@@ -37,8 +37,8 @@ func main() {
 
 	a = getNumber("первое")
 
-	loop := true
-	for loop {
+loop:
+	for {
 		fmt.Print("Введите арифметическую операцию (+, -, *, /, **, ^, !): ")
 		fmt.Scanln(&op)
 		switch op {
@@ -49,7 +49,7 @@ func main() {
 			"**",
 			"^",
 			"!":
-			loop = false
+			break loop
 		default:
 			fmt.Println("Введено неверное значение. Попробуйте еще раз.")
 		}
