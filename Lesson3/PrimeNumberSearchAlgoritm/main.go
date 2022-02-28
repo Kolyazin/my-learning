@@ -20,15 +20,15 @@ func Eratosthenes(n int) []int {
 	var primes []int
 	for i := 2; i <= n; i++ {
 		// flag = true означает простое число
-		flag := true
+		isPrime := true
 		for j := 2; j < i; j++ {
 			if i%j == 0 {
 				// если число поделилось без остатка на другое, то это уже не простое, его не добавляем, и переходим к следующему.
-				flag = false
+				isPrime = false
 				break
 			}
 		}
-		if flag { // если flag == true значит число простое, его добавляем в итоговый слайс
+		if isPrime { // если flag == true значит число простое, его добавляем в итоговый слайс
 			primes = append(primes, i)
 		}
 	}
