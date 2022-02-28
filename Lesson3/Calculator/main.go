@@ -39,15 +39,15 @@ func main() {
 
 loop:
 	for {
-		fmt.Print("Введите арифметическую операцию (+, -, *, /, **, ^, !): ")
+		fmt.Print("Введите арифметическую операцию (+, -, *, /, ^, root, !): ")
 		fmt.Scanln(&op)
 		switch op {
 		case "+",
 			"-",
 			"*",
 			"/",
-			"**",
 			"^",
+			"root",
 			"!":
 			break loop
 		default:
@@ -56,7 +56,7 @@ loop:
 	}
 
 	// второе число не нужно, если вычисляем факториал или квадратный корень
-	if op != "!" && op != "^" {
+	if op != "!" {
 		b = getNumber("второе")
 	}
 
@@ -73,10 +73,14 @@ loop:
 			os.Exit(1)
 		}
 		res = a / b
-	case "**":
-		res = math.Pow(a, b)
 	case "^":
-		res = math.Sqrt(a)
+		res = math.Pow(a, b)
+	case "root":
+		if b == 0 {
+			res = 0
+		} else {
+			res = math.Pow(a, 1/b)
+		}
 	case "!":
 		// если a отрицательное или не целое число, то не считаем факториал
 		if _, frac := math.Modf(a); a < 0 || frac != 0 {
