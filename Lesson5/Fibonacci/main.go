@@ -23,7 +23,11 @@ func fibonacciOptimized(n int) int {
 func main() {
 	var n int
 	fmt.Printf("Ведите число для которого нужно вычислить число Фибоначчи: ")
-	fmt.Scanln(&n)
+	_, err := fmt.Scanln(&n)
+	if err != nil {
+		fmt.Println("Введено неверное значение. Попробуйте еще раз.")
+		return
+	}
 	fmt.Println(fibonacci(n))
 	fmt.Println(fibonacciOptimized(n))
 }
