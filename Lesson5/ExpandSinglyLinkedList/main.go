@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"math/rand"
 	"time"
-	"math"
 )
 
 type Node struct {
@@ -113,16 +113,34 @@ func (head *Node) ExpandSLL() (newHead *Node) {
 }
 
 func main() {
+	var cnt, rng int
 	list := new(Node)
-	list.GenerateSLL(20, 2)
+	fmt.Printf("Введи количество элементов генерируемого списка: ")
+	_, err := fmt.Scanln(&cnt)
+	if err != nil {
+		fmt.Println("Введено неверное значение. Попробуйте еще раз.")
+		return
+	}
+	fmt.Printf("Введи диапазон генерации случайного числа для каждого элемента (10^N) N= ")
+	_, err = fmt.Scanln(&rng)
+	if err != nil {
+		fmt.Println("Введено неверное значение. Попробуйте еще раз.")
+		return
+	}
+	// генерирование односвязного списка
+	list.GenerateSLL(cnt, rng)
 	fmt.Printf("Сгенерированный односвязный список: ")
+	//вывод на экран односвязного списка
 	list.PrintSLL()
+	//разворот односвязного списка
 	list = list.ExpandSLL()
 	fmt.Printf("Развернутый односвязный список    : ")
 	list.PrintSLL()
+	//сортировка односвязного списка
 	list = list.BubbleSortSLL()
 	fmt.Printf("Отсортированный односвязный список: ")
 	list.PrintSLL()
+	//разворот отсортированного односвязного списка
 	list = list.ExpandSLL()
 	fmt.Printf("Развернутый односвязный список    : ")
 	list.PrintSLL()
