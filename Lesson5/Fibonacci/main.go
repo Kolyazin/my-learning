@@ -14,8 +14,10 @@ func fibonacciOptimized(n int) int {
 	fi := make(map[int]int)
 	fi[0] = 0
 	fi[1] = 1
-	for i := 2; i <= n; i++ {
-		fi[i] = fi[i-1] + fi[i-2]
+	if n == 0 || n == 1 {
+		return n
+	} else {
+		fi[n] = fibonacciOptimized(n-1) + fibonacciOptimized(n-2)
 	}
 	return fi[n]
 }
