@@ -10,15 +10,15 @@ func fibonacci(n int) int {
 	}
 }
 
+var fi = map[int]int{0:0, 1:1}
+
 func fibonacciOptimized(n int) int {
-	fi := make(map[int]int)
-	fi[0] = 0
-	fi[1] = 1
-	if n == 0 || n == 1 {
-		return n
-	} else {
-		fi[n] = fibonacciOptimized(n-1) + fibonacciOptimized(n-2)
+	result, ok := fi[n] //0 и 1 уже в мапе при инициализации.
+	if ok {
+		return result
 	}
+	fi[n] = fibonacciOptimized(n-1) + fibonacciOptimized(n-2)
+
 	return fi[n]
 }
 
