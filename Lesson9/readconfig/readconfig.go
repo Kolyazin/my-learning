@@ -59,6 +59,11 @@ func ReadConfig() (Config, error) {
 			if err != nil {
 				return Conf, err
 			}
+
+			defer func() {
+				f.Close()
+			}()
+
 			content, err := ioutil.ReadAll(f)
 			if err != nil {
 				return Conf, err
