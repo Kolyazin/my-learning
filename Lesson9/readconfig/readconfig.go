@@ -14,12 +14,18 @@ import (
 type Config struct {
 	Port int
 	Db_url string
-	Db_url_parsed *url.URL
 	Jaeger_url string
-	Jaeger_url_parsed *url.URL
 	Sentry_url string
-	Sentry_url_parsed *url.URL
 	Kafka_broker string
+	Some_app_id string
+	Some_app_key string
+}
+
+type ValidConfig struct {
+	Port int
+	Db_url_parsed *url.URL
+	Jaeger_url_parsed *url.URL
+	Sentry_url_parsed *url.URL
 	Kafka_broker_parsed *url.URL
 	Some_app_id string
 	Some_app_key string
@@ -27,6 +33,7 @@ type Config struct {
 
 var (
 	Conf Config
+	ValidConf ValidConfig
 )
 
 
@@ -42,7 +49,7 @@ func init() {
 
 // функция читает конфигурацию из флагов, если флаги не переданы, то берет из конфигурационного файла
 // переданного в качестве аргумента, если ничего не передается, то читает из переменных окружения
-func ReadConfig() (Config, error) {
+func ReadConfig() (ValidConfig, error) {
 	var err error
 	flag.Parse()
 
@@ -51,13 +58,13 @@ func ReadConfig() (Config, error) {
 			//если флагов и аргументов нет, то беру из переменных окружения
 			err = envconfig.Process("", &Conf)
 			if err != nil {
-				return Conf, err
+				return ValidConf, err
 			}
 		} else {
 			// если есть конфигурационный файл в качестве аргумента
 			f, err := os.Open(flag.Arg(0))
 			if err != nil {
-				return Conf, err
+				return ValidConf, err
 			}
 
 			defer func() {
@@ -66,38 +73,41 @@ func ReadConfig() (Config, error) {
 
 			content, err := ioutil.ReadAll(f)
 			if err != nil {
-				return Conf, err
+				return ValidConf, err
 			}
 			if strings.HasSuffix(flag.Arg(0), ".yaml") {
 				err = yaml.Unmarshal(content, &Conf)
 				if err != nil {
-					return Conf, err
+					return ValidConf, err
 				}
 			} else {
 				err = json.Unmarshal(content, &Conf)
 				if err != nil {
-					return Conf, err
+					return ValidConf, err
 				}
 			}
 		}
 	}
 //валидирую url
-	Conf.Db_url_parsed, err = url.Parse(Conf.Db_url)
+	ValidConf.Port = Conf.Port
+	ValidConf.Db_url_parsed, err = url.Parse(Conf.Db_url)
 	if err != nil {
-		return Conf, err
+		return ValidConf, err
 	}
-	Conf.Jaeger_url_parsed, err = url.Parse(Conf.Jaeger_url)
+	ValidConf.Jaeger_url_parsed, err = url.Parse(Conf.Jaeger_url)
 	if err != nil {
-		return Conf, err
+		return ValidConf, err
 	}
-	Conf.Sentry_url_parsed, err = url.Parse(Conf.Sentry_url)
+	ValidConf.Sentry_url_parsed, err = url.Parse(Conf.Sentry_url)
 	if err != nil {
-		return Conf, err
+		return ValidConf, err
 	}
-	Conf.Kafka_broker_parsed, err = url.Parse(Conf.Kafka_broker)
+	ValidConf.Kafka_broker_parsed, err = url.Parse(Conf.Kafka_broker)
 	if err != nil {
-		return Conf, err
+		return ValidConf, err
 	}
+	ValidConf.Some_app_id = Conf.Some_app_id
+	ValidConf.Some_app_key = Conf.Some_app_key
 
-	return Conf, nil
+	return ValidConf, nil
 }
