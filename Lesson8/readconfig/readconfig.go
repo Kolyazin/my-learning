@@ -17,19 +17,28 @@ type RawConfig struct {
 	Some_app_key string
 }
 
+type UrlUrl url.URL
+
+func (uu *UrlUrl) Decode(value string) error {
+	zz, _ := url.Parse(value)
+	*uu = UrlUrl(*zz)
+	return nil
+}
+
 type ValidConfig struct {
 	Port int
-	Db_url_parsed *url.URL
-	Jaeger_url_parsed *url.URL
-	Sentry_url_parsed *url.URL
-	Kafka_broker_parsed *url.URL
+	Db_url *UrlUrl
+	Jaeger_url *UrlUrl
+	Sentry_url *UrlUrl
+	Kafka_broker *UrlUrl
 	Some_app_id string
 	Some_app_key string
 }
 
+
 var (
 	RawConf RawConfig
-	ValidConf ValidConfig
+	ValidConf = ValidConfig{0, new(UrlUrl), new(UrlUrl), new(UrlUrl), new(UrlUrl), "",""}
 )
 
 
@@ -47,20 +56,25 @@ func ReadConfig() ValidConfig {
 	flag.Parse()
 
 	if flag.NFlag() == 0 {
-//если флагов нет, то беру из переменных окружения
-		err := envconfig.Process("", &RawConf)
+		//если флагов нет, то беру из переменных окружения
+		err := envconfig.Process("", &ValidConf)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
+	} else {
+//		ValidConf = ValidConfig{}
+		//валидирую url
+		ValidConf.Port = RawConf.Port
+		db_url, _ := url.Parse(RawConf.Db_url)
+		*ValidConf.Db_url = UrlUrl(*db_url)
+		jaeger_url, _ := url.Parse(RawConf.Jaeger_url)
+		*ValidConf.Jaeger_url = UrlUrl(*jaeger_url)
+		sentry_url, _ := url.Parse(RawConf.Sentry_url)
+		*ValidConf.Sentry_url = UrlUrl(*sentry_url)
+		kafka_broker, _ := url.Parse(RawConf.Kafka_broker)
+		*ValidConf.Kafka_broker = UrlUrl(*kafka_broker)
+		ValidConf.Some_app_id = RawConf.Some_app_id
+		ValidConf.Some_app_key = RawConf.Some_app_key
 	}
-//валидирую url
-	ValidConf.Port = RawConf.Port
-	ValidConf.Db_url_parsed, _ = url.Parse(RawConf.Db_url)
-	ValidConf.Jaeger_url_parsed, _ = url.Parse(RawConf.Jaeger_url)
-	ValidConf.Sentry_url_parsed, _ = url.Parse(RawConf.Sentry_url)
-	ValidConf.Kafka_broker_parsed, _ = url.Parse(RawConf.Kafka_broker)
-	ValidConf.Some_app_id = RawConf.Some_app_id
-	ValidConf.Some_app_key = RawConf.Some_app_key
-
 	return ValidConf
 }

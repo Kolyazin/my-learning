@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"Lesson8/readconfig"
 	"reflect"
+	"os"
 )
 
 
 func main()  {
+	os.Setenv("DB_URL", "postgres://db-user:db-password@petstore-db:5432/petstore?sslmode=disable")
 	config := readconfig.ReadConfig()
 
 	v := reflect.ValueOf(config)
