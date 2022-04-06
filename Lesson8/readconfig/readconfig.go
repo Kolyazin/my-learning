@@ -53,11 +53,12 @@ func init() {
 }
 
 func ReadConfig() ValidConfig {
+	var err error
 	flag.Parse()
 
 	if flag.NFlag() == 0 {
 		//если флагов нет, то беру из переменных окружения
-		err := envconfig.Process("", &ValidConf)
+		err = envconfig.Process("", &ValidConf)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -65,13 +66,25 @@ func ReadConfig() ValidConfig {
 //		ValidConf = ValidConfig{}
 		//валидирую url
 		ValidConf.Port = RawConf.Port
-		db_url, _ := url.Parse(RawConf.Db_url)
+		db_url, err := url.Parse(RawConf.Db_url)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 		*ValidConf.Db_url = UrlUrl(*db_url)
-		jaeger_url, _ := url.Parse(RawConf.Jaeger_url)
+		jaeger_url, err := url.Parse(RawConf.Jaeger_url)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 		*ValidConf.Jaeger_url = UrlUrl(*jaeger_url)
-		sentry_url, _ := url.Parse(RawConf.Sentry_url)
+		sentry_url, err := url.Parse(RawConf.Sentry_url)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 		*ValidConf.Sentry_url = UrlUrl(*sentry_url)
-		kafka_broker, _ := url.Parse(RawConf.Kafka_broker)
+		kafka_broker, err := url.Parse(RawConf.Kafka_broker)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 		*ValidConf.Kafka_broker = UrlUrl(*kafka_broker)
 		ValidConf.Some_app_id = RawConf.Some_app_id
 		ValidConf.Some_app_key = RawConf.Some_app_key
