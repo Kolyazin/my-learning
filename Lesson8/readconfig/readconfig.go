@@ -20,9 +20,9 @@ type RawConfig struct {
 type UrlUrl url.URL
 
 func (uu *UrlUrl) Decode(value string) error {
-	zz, _ := url.Parse(value)
+	zz, err := url.Parse(value)
 	*uu = UrlUrl(*zz)
-	return nil
+	return err
 }
 
 type ValidConfig struct {
