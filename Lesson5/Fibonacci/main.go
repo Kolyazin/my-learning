@@ -1,26 +1,9 @@
 package main
 
-import "fmt"
-
-func fibonacci(n int) int {
-	if n == 0 || n == 1 {
-		return n
-	} else {
-		return fibonacci(n-1) + fibonacci(n-2)
-	}
-}
-
-var fi = map[int]int{0:0, 1:1}
-
-func fibonacciOptimized(n int) int {
-	result, ok := fi[n] //0 и 1 уже в мапе при инициализации.
-	if ok {
-		return result
-	}
-	fi[n] = fibonacciOptimized(n-1) + fibonacciOptimized(n-2)
-
-	return fi[n]
-}
+import (
+	"fmt"
+	"main/fibonacci"
+)
 
 func main() {
 	var n int
@@ -30,6 +13,6 @@ func main() {
 		fmt.Println("Введено неверное значение. Попробуйте еще раз.")
 		return
 	}
-	fmt.Println(fibonacci(n))
-	fmt.Println(fibonacciOptimized(n))
+	fmt.Println(fibonacci.Fibonacci(n))
+	fmt.Println(fibonacci.FibonacciOptimized(n))
 }
