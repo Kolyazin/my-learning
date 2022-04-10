@@ -1,0 +1,7 @@
+port: 3232
+db_url: postgres://db-user:db-password@petstore-db:5432/petstore?sslmode=disable
+jaeger_url: http://yaml:16686
+sentry_url: http://yaml:9000
+kafka_broker: yaml:9092
+some_app_id: YamlId
+some_app_key: YamlKey
